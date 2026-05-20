@@ -38,4 +38,16 @@ public class TarefaController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+
+    // Atualizar tarefa existente (Retorna 200 OK ou 404 Not Found)
+    @PutMapping("/{id}")
+    public ResponseEntity<Tarefa> atualizar(@PathVariable Long id, @RequestBody Tarefa tarefaAtualizada) {
+        if (!tarefaRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        tarefaAtualizada.setId(id); // Garante que vai atualizar o ID correto
+        Tarefa tarefaSalva = tarefaRepository.save(tarefaAtualizada);
+        return ResponseEntity.ok(tarefaSalva);
+    }
+
 }
