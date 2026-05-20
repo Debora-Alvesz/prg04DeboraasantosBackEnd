@@ -8,24 +8,34 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
-@RestController // Avisa ao Spring que esta classe gerencia rotas de API
-@RequestMapping("/tarefas") // Define que a rota base será http://localhost:8080/tarefas
+@RestController
+@RequestMapping("/tarefas")
 public class TarefaController {
 
-    @Autowired // Injeta o repository criado no Passo 1 para usarmos aqui
+    @Autowired
     private TarefaRepository tarefaRepository;
 
-    // ROTA 1: Buscar todas as tarefas do banco (GET)
+    // Listar todas as tarefas
     @GetMapping
     public List<Tarefa> listarTodas() {
         return tarefaRepository.findAll();
     }
 
-    // ROTA 2: Criar uma nova tarefa (POST) com status code 201 Created
+    // Criar uma nova tarefa (Retorna 201 Created)
     @PostMapping
     public ResponseEntity<Tarefa> criar(@RequestBody Tarefa novaTarefa) {
         Tarefa tarefaSalva = tarefaRepository.save(novaTarefa);
         return new ResponseEntity<>(tarefaSalva, HttpStatus.CREATED);
     }
+
+    // Buscar tarefa por ID (Retorna 200 OK ou 404 Not Found)
+    @GetMapping("/{id}")
+    public ResponseEntity<Tarefa> buscarPorId(@PathVariable Long id) {
+        Optional<Tarefa> tarefa = tarefaRepository.findById(id);
+        return tarefa.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
 }
