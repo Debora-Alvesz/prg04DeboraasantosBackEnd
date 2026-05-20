@@ -38,7 +38,6 @@ public class TarefaController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-
     // Atualizar tarefa existente (Retorna 200 OK ou 404 Not Found)
     @PutMapping("/{id}")
     public ResponseEntity<Tarefa> atualizar(@PathVariable Long id, @RequestBody Tarefa tarefaAtualizada) {
@@ -50,4 +49,13 @@ public class TarefaController {
         return ResponseEntity.ok(tarefaSalva);
     }
 
+    // Deletar tarefa por ID (Retorna 204 No Content ou 404 Not Found)
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        if (!tarefaRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        tarefaRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
 }
