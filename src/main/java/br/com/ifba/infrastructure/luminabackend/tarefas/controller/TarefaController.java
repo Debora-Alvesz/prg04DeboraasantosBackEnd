@@ -1,61 +1,56 @@
 package br.com.ifba.infrastructure.luminabackend.tarefas.controller;
 
 import br.com.ifba.infrastructure.luminabackend.tarefas.entity.Tarefa;
-import br.com.ifba.infrastructure.luminabackend.tarefas.repository.TarefaRepository;
+import br.com.ifba.infrastructure.luminabackend.tarefas.service.TarefaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/tarefas")
+@RequestMapping("/api/tarefas") // Define a rota padrão exigida no documento do projeto
 public class TarefaController {
 
     @Autowired
-    private TarefaRepository tarefaRepository;
+    private TarefaService tarefaService; // Conecta com a camada de serviço (regras de negócio)
 
-    // Listar todas as tarefas
-    @GetMapping
-    public List<Tarefa> listarTodas() {
-        return tarefaRepository.findAll();
-    }
-
-    // Criar uma nova tarefa (Retorna 201 Created)
+    // C - Criar uma nova tarefa (Retorna status 201 Created)
     @PostMapping
     public ResponseEntity<Tarefa> criar(@RequestBody Tarefa novaTarefa) {
-        Tarefa tarefaSalva = tarefaRepository.save(novaTarefa);
+        Tarefa tarefaSalva = tarefaService.criar(novaTarefa);
         return new ResponseEntity<>(tarefaSalva, HttpStatus.CREATED);
     }
 
-    // Buscar tarefa por ID (Retorna 200 OK ou 404 Not Found)
+    // R - Listar todas as tarefas cadastradas (Retorna status 200 OK)
+    @GetMapping
+    public ResponseEntity<List<Tarefa>> listarTodas() {
+        return ResponseEntity.ok(tarefaService.listarTodas());
+    }
+
+    // R - Buscar uma única tarefa por ID (Retorna 200 OK ou 404 caso não exista)
     @GetMapping("/{id}")
     public ResponseEntity<Tarefa> buscarPorId(@PathVariable Long id) {
-        Optional<Tarefa> tarefa = tarefaRepository.findById(id);
-        return tarefa.map(ResponseEntity::ok)
+        return tarefaService.buscarPorId(id)
+                .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Atualizar tarefa existente (Retorna 200 OK ou 404 Not Found)
+    // U - Atualizar uma tarefa existente (Retorna 200 OK ou 404 caso o ID não exista)
     @PutMapping("/{id}")
-    public ResponseEntity<Tarefa> atualizar(@PathVariable Long id, @RequestBody Tarefa tarefaAtualizada) {
-        if (!tarefaRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        tarefaAtualizada.setId(id); // Garante que vai atualizar o ID correto
-        Tarefa tarefaSalva = tarefaRepository.save(tarefaAtualizada);
-        return ResponseEntity.ok(tarefaSalva);
+    public ResponseEntity<Tarefa> atualizar(@PathVariable Long id, @RequestBody Tarefa dadosAtualizados) {
+        return tarefaService.atualizar(id, dadosAtualizados)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Deletar tarefa por ID (Retorna 204 No Content ou 404 Not Found)
+    // D - Deletar uma tarefa por ID (Retorna 204 No Content ou 404 caso o ID não exista)
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        if (!tarefaRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
+        if (tarefaService.deletar(id)) {
+            return ResponseEntity.noContent().build();
         }
-        tarefaRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.notFound().build();
     }
 }

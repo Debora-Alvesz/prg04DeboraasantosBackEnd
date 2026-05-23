@@ -1,4 +1,4 @@
-package br.com.ifba.luminabackend;
+package br.com.ifba.infrastructure.luminabackend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
