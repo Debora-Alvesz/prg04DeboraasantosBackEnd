@@ -1,4 +1,4 @@
-package br.com.ifba.infraestructure.luminabackend.categoria.repository;
+package br.com.ifba.infrastructure.luminabackend.categoria.repository;
 
 import br.com.ifba.infrastructure.luminabackend.categoria.entity.Categoria;
 import org.springframework.data.jpa.repository.JpaRepository;

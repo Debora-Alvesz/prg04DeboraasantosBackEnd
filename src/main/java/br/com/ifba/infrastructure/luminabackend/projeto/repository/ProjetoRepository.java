@@ -1,4 +1,4 @@
-package br.com.ifba.infraestructure.luminabackend.projeto.repository;
+package br.com.ifba.infrastructure.luminabackend.projeto.repository;
 
 import br.com.ifba.infrastructure.luminabackend.projeto.entity.Projeto;
 import org.springframework.data.jpa.repository.JpaRepository;

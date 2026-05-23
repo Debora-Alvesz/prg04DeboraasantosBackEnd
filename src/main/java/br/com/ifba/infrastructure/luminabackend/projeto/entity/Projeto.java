@@ -1,4 +1,4 @@
-package br.com.ifba.infraestructure.luminabackend.projeto.entity;
+package br.com.ifba.infrastructure.luminabackend.projeto.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

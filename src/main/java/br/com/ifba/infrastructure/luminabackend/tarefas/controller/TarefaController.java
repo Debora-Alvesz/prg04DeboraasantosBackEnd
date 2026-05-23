@@ -1,7 +1,7 @@
-package br.com.ifba.infraestructure.luminabackend.tarefas.controller;
+package br.com.ifba.infrastructure.luminabackend.tarefas.controller;
 
-import br.com.ifba.infraestructure.luminabackend.tarefas.entity.Tarefa;
-import br.com.ifba.infraestructure.luminabackend.tarefas.repository.TarefaRepository;
+import br.com.ifba.infrastructure.luminabackend.tarefas.entity.Tarefa;
+import br.com.ifba.infrastructure.luminabackend.tarefas.repository.TarefaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
