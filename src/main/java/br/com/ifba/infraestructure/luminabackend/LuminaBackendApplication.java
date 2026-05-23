@@ -1,4 +1,4 @@
-package com.lumina.luminabackend;
+package br.com.ifba.infraestructure.luminabackend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

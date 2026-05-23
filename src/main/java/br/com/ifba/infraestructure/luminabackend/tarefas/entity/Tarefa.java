@@ -1,4 +1,4 @@
-package com.lumina.luminabackend.tarefas.model;
+package br.com.ifba.infraestructure.luminabackend.tarefas.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
