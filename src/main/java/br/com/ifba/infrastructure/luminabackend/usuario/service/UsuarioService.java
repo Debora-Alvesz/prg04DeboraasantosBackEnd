@@ -2,6 +2,7 @@ package br.com.ifba.infrastructure.luminabackend.usuario.service;
 
 import br.com.ifba.infrastructure.luminabackend.usuario.entity.Usuario;
 import br.com.ifba.infrastructure.luminabackend.usuario.repository.UsuarioRepository;
+import br.com.ifba.infrastructure.luminabackend.exception.ObjetoNaoEncontradoException; // IMPORT ADICIONADO AQUI
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -23,37 +24,34 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
-    // R - Busca um usuário pelo ID
-    public Optional<Usuario> buscarPorId(Long id) {
-        return usuarioRepository.findById(id);
+    // R - Buscar usuário por ID (Dispara erro se não encontrar)
+    public Usuario buscarPorId(Long id) {
+        return usuarioRepository.findById(id)
+                .orElseThrow(() -> new ObjetoNaoEncontradoException("Usuário com o ID " + id + " não foi encontrado."));
     }
 
-    // U - Atualiza os dados de um usuário (nome, senha, foto, etc.) se ele existir
-    public Optional<Usuario> atualizar(Long id, Usuario dadosAtualizados) {
-        // 1. Busca o usuário já existente no banco de dados
-        return usuarioRepository.findById(id).map(usuarioExistente -> {
+    // U - Atualizar dados do usuário (Dispara erro se não encontrar)
+    public Usuario atualizar(Long id, Usuario dadosAtualizados) {
+        // Busca o usuário existente, se não achar, dispara o erro na hora
+        Usuario usuarioExistente = usuarioRepository.findById(id)
+                .orElseThrow(() -> new ObjetoNaoEncontradoException("Não foi possível atualizar. Usuário com o ID " + id + " não existe."));
 
-            // 2. Transfere os dados novos do Postman para o usuário que já existe
-            usuarioExistente.setNome(dadosAtualizados.getNome());
-            usuarioExistente.setEmail(dadosAtualizados.getEmail());
-            usuarioExistente.setSenha(dadosAtualizados.getSenha());
-            usuarioExistente.setRole(dadosAtualizados.getRole());
+        // Transfere os dados novos
+        usuarioExistente.setNome(dadosAtualizados.getNome());
+        usuarioExistente.setEmail(dadosAtualizados.getEmail());
+        usuarioExistente.setSenha(dadosAtualizados.getSenha());
+        usuarioExistente.setRole(dadosAtualizados.getRole());
 
-            // Se a sua entidade tiver o campo 'foto', descomente a linha abaixo:
-            // usuarioExistente.setFoto(dadosAtualizados.getFoto());
-
-            // 3. Salva o objeto mesclado (O JPA fará um UPDATE seguro sem erro de e-mail duplicado)
-            return usuarioRepository.save(usuarioExistente);
-        });
+        return usuarioRepository.save(usuarioExistente);
     }
 
-    // D - Deleta um usuário do banco pelo ID
-    public boolean deletar(Long id) {
+    // D - Deletar um usuário por ID (Dispara erro se não encontrar)
+    public void deletar(Long id) {
+        // Se o ID não existir, dispara o erro antes de tentar deletar
         if (!usuarioRepository.existsById(id)) {
-            return false;
+            throw new ObjetoNaoEncontradoException("Não foi possível deletar. Usuário com o ID " + id + " não existe.");
         }
         usuarioRepository.deleteById(id);
-        return true;
     }
 
     // Método extra para o login simples (busca por email e senha)
