@@ -30,11 +30,21 @@ public class UsuarioService {
 
     // U - Atualiza os dados de um usuário (nome, senha, foto, etc.) se ele existir
     public Optional<Usuario> atualizar(Long id, Usuario dadosAtualizados) {
-        if (!usuarioRepository.existsById(id)) {
-            return Optional.empty(); // Retorna vazio se o usuário não existir
-        }
-        dadosAtualizados.setId(id); // Garante que vai salvar por cima do ID certo
-        return Optional.of(usuarioRepository.save(dadosAtualizados));
+        // 1. Busca o usuário já existente no banco de dados
+        return usuarioRepository.findById(id).map(usuarioExistente -> {
+
+            // 2. Transfere os dados novos do Postman para o usuário que já existe
+            usuarioExistente.setNome(dadosAtualizados.getNome());
+            usuarioExistente.setEmail(dadosAtualizados.getEmail());
+            usuarioExistente.setSenha(dadosAtualizados.getSenha());
+            usuarioExistente.setRole(dadosAtualizados.getRole());
+
+            // Se a sua entidade tiver o campo 'foto', descomente a linha abaixo:
+            // usuarioExistente.setFoto(dadosAtualizados.getFoto());
+
+            // 3. Salva o objeto mesclado (O JPA fará um UPDATE seguro sem erro de e-mail duplicado)
+            return usuarioRepository.save(usuarioExistente);
+        });
     }
 
     // D - Deleta um usuário do banco pelo ID
