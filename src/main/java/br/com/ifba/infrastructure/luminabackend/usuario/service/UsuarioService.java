@@ -3,6 +3,7 @@ package br.com.ifba.infrastructure.luminabackend.usuario.service;
 import br.com.ifba.infrastructure.luminabackend.usuario.entity.Usuario;
 import br.com.ifba.infrastructure.luminabackend.usuario.repository.UsuarioRepository;
 import br.com.ifba.infrastructure.luminabackend.exception.ObjetoNaoEncontradoException; // IMPORT ADICIONADO AQUI
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -15,6 +16,7 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     // C - Cadastra um novo usuário
+    @Transactional
     public Usuario cadastrar(Usuario usuario) {
         return usuarioRepository.save(usuario);
     }
@@ -31,6 +33,7 @@ public class UsuarioService {
     }
 
     // U - Atualizar dados do usuário (Dispara erro se não encontrar)
+    @Transactional
     public Usuario atualizar(Long id, Usuario dadosAtualizados) {
         // Busca o usuário existente, se não achar, dispara o erro na hora
         Usuario usuarioExistente = usuarioRepository.findById(id)
@@ -46,6 +49,7 @@ public class UsuarioService {
     }
 
     // D - Deletar um usuário por ID (Dispara erro se não encontrar)
+    @Transactional
     public void deletar(Long id) {
         // Se o ID não existir, dispara o erro antes de tentar deletar
         if (!usuarioRepository.existsById(id)) {

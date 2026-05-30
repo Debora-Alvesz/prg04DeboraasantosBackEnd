@@ -2,6 +2,7 @@ package br.com.ifba.infrastructure.luminabackend.projeto.service;
 
 import br.com.ifba.infrastructure.luminabackend.projeto.entity.Projeto;
 import br.com.ifba.infrastructure.luminabackend.projeto.repository.ProjetoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -14,6 +15,7 @@ public class ProjetoService {
     private ProjetoRepository projetoRepository;
 
     // C - Salva um novo projeto
+    @Transactional
     public Projeto criar(Projeto projeto) {
         return projetoRepository.save(projeto);
     }
@@ -29,6 +31,7 @@ public class ProjetoService {
     }
 
     // U - Atualiza os dados de um projeto se ele existir
+    @Transactional
     public Optional<Projeto> atualizar(Long id, Projeto dadosAtualizados) {
         if (!projetoRepository.existsById(id)) {
             return Optional.empty(); // Retorna vazio se o projeto não existir
@@ -38,6 +41,7 @@ public class ProjetoService {
     }
 
     // D - Deleta um projeto por ID
+    @Transactional
     public boolean deletar(Long id) {
         if (!projetoRepository.existsById(id)) {
             return false;

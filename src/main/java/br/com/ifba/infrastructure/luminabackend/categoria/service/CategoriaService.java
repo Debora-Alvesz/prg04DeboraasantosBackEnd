@@ -2,6 +2,7 @@ package br.com.ifba.infrastructure.luminabackend.categoria.service;
 
 import br.com.ifba.infrastructure.luminabackend.categoria.entity.Categoria;
 import br.com.ifba.infrastructure.luminabackend.categoria.repository.CategoriaRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -14,6 +15,7 @@ public class CategoriaService {
     private CategoriaRepository categoriaRepository;
 
     // C - Salva uma nova categoria de tarefas
+    @Transactional
     public Categoria criar(Categoria categoria) {
         return categoriaRepository.save(categoria);
     }
@@ -24,6 +26,7 @@ public class CategoriaService {
     }
 
     // U - Atualiza o nome de uma categoria se ela existir no banco
+    @Transactional
     public Optional<Categoria> atualizar(Long id, Categoria dadosAtualizados) {
         if (!categoriaRepository.existsById(id)) {
             return Optional.empty(); // Retorna vazio se não encontrar a categoria
@@ -33,6 +36,7 @@ public class CategoriaService {
     }
 
     // D - Deleta uma categoria do banco usando o ID
+    @Transactional
     public boolean deletar(Long id) {
         if (!categoriaRepository.existsById(id)) {
             return false; // Retorna falso se a categoria não existir
