@@ -5,6 +5,7 @@ import br.com.ifba.infrastructure.luminabackend.categoria.dto.CategoriaPostReque
 import br.com.ifba.infrastructure.luminabackend.categoria.entity.Categoria;
 import br.com.ifba.infrastructure.luminabackend.categoria.service.CategoriaService;
 import br.com.ifba.infrastructure.luminabackend.mapper.ObjectMapperUtil;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class CategoriaController {
 
     // C - Criar uma nova categoria (Recebe RequestDto e devolve GetResponseDto)
     @PostMapping
-    public ResponseEntity<CategoriaGetResponseDto> criar(@RequestBody CategoriaPostRequestDto dto) {
+    public ResponseEntity<CategoriaGetResponseDto> criar(@Valid @RequestBody CategoriaPostRequestDto dto) {
         // 1. Converte o DTO recebido do Postman para a Entidade Categoria
         Categoria categoriaEntity = objectMapperUtil.map(dto, Categoria.class);
 
@@ -51,7 +52,7 @@ public class CategoriaController {
 
     // U - Editar uma categoria por ID (Recebe RequestDto e devolve GetResponseDto)
     @PutMapping("/{id}")
-    public ResponseEntity<CategoriaGetResponseDto> atualizar(@PathVariable Long id, @RequestBody CategoriaPostRequestDto dto) {
+    public ResponseEntity<CategoriaGetResponseDto> atualizar(@PathVariable Long id, @Valid @RequestBody CategoriaPostRequestDto dto) {
         // 1. Converte os novos dados do DTO para a Entidade Categoria
         Categoria dadosAtualizados = objectMapperUtil.map(dto, Categoria.class);
 

@@ -5,6 +5,7 @@ import br.com.ifba.infrastructure.luminabackend.usuario.dto.UsuarioPostRequestDt
 import br.com.ifba.infrastructure.luminabackend.usuario.entity.Usuario;
 import br.com.ifba.infrastructure.luminabackend.usuario.service.UsuarioService;
 import br.com.ifba.infrastructure.luminabackend.mapper.ObjectMapperUtil;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class UsuarioController {
 
     // C - Cadastrar um novo usuário
     @PostMapping
-    public ResponseEntity<UsuarioGetResponseDto> cadastrar(@RequestBody UsuarioPostRequestDto dto) {
+    public ResponseEntity<UsuarioGetResponseDto> cadastrar( @Valid @RequestBody UsuarioPostRequestDto dto) {
         Usuario usuarioEntity = objectMapperUtil.map(dto, Usuario.class);
         Usuario usuarioSalvo = usuarioService.cadastrar(usuarioEntity);
         UsuarioGetResponseDto responseDto = objectMapperUtil.map(usuarioSalvo, UsuarioGetResponseDto.class);
@@ -49,7 +50,7 @@ public class UsuarioController {
 
     // U - Editar dados do usuário por ID
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioGetResponseDto> atualizar(@PathVariable Long id, @RequestBody UsuarioPostRequestDto dto) {
+    public ResponseEntity<UsuarioGetResponseDto> atualizar(@PathVariable Long id, @Valid @RequestBody UsuarioPostRequestDto dto) {
         Usuario dadosAtualizados = objectMapperUtil.map(dto, Usuario.class);
         dadosAtualizados.setId(id);
 

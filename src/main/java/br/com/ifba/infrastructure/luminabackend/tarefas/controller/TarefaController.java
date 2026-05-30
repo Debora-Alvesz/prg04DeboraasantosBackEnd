@@ -5,6 +5,7 @@ import br.com.ifba.infrastructure.luminabackend.tarefas.dto.TarefaPostRequestDto
 import br.com.ifba.infrastructure.luminabackend.tarefas.entity.Tarefa;
 import br.com.ifba.infrastructure.luminabackend.tarefas.service.TarefaService;
 import br.com.ifba.infrastructure.luminabackend.mapper.ObjectMapperUtil;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class TarefaController {
 
     // C - Criar uma nova tarefa (Recebe RequestDto e devolve GetResponseDto)
     @PostMapping
-    public ResponseEntity<TarefaGetResponseDto> criar(@RequestBody TarefaPostRequestDto dto) {
+    public ResponseEntity<TarefaGetResponseDto> criar( @Valid @RequestBody TarefaPostRequestDto dto) {
         // 1. Converte o DTO recebido para a Entidade Tarefa antes de salvar
         Tarefa tarefaEntity = objectMapperUtil.map(dto, Tarefa.class);
 
@@ -63,7 +64,7 @@ public class TarefaController {
 
     // U - Atualizar uma tarefa existente (Recebe RequestDto e devolve GetResponseDto)
     @PutMapping("/{id}")
-    public ResponseEntity<TarefaGetResponseDto> atualizar(@PathVariable Long id, @RequestBody TarefaPostRequestDto dto) {
+    public ResponseEntity<TarefaGetResponseDto> atualizar(@PathVariable Long id, @Valid @RequestBody TarefaPostRequestDto dto) {
         // 1. Converte os dados do DTO para a Entidade Tarefa
         Tarefa dadosAtualizados = objectMapperUtil.map(dto, Tarefa.class);
 

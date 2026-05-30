@@ -5,6 +5,7 @@ import br.com.ifba.infrastructure.luminabackend.projeto.dto.ProjetoPostRequestDt
 import br.com.ifba.infrastructure.luminabackend.projeto.entity.Projeto;
 import br.com.ifba.infrastructure.luminabackend.projeto.service.ProjetoService;
 import br.com.ifba.infrastructure.luminabackend.mapper.ObjectMapperUtil;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class ProjetoController {
 
     // C - Criar um novo projeto (Recebe RequestDto e devolve GetResponseDto)
     @PostMapping
-    public ResponseEntity<ProjetoGetResponseDto> criar(@RequestBody ProjetoPostRequestDto dto) {
+    public ResponseEntity<ProjetoGetResponseDto> criar(@Valid @RequestBody ProjetoPostRequestDto dto) {
         // 1. Converte o DTO recebido para a Entidade Projeto antes de salvar
         Projeto projetoEntity = objectMapperUtil.map(dto, Projeto.class);
 
@@ -63,7 +64,7 @@ public class ProjetoController {
 
     // U - Editar dados de um projeto existente (Recebe RequestDto e devolve GetResponseDto)
     @PutMapping("/{id}")
-    public ResponseEntity<ProjetoGetResponseDto> atualizar(@PathVariable Long id, @RequestBody ProjetoPostRequestDto dto) {
+    public ResponseEntity<ProjetoGetResponseDto> atualizar(@PathVariable Long id, @Valid @RequestBody ProjetoPostRequestDto dto) {
         // 1. Converte os dados do DTO para a Entidade Projeto
         Projeto dadosAtualizados = objectMapperUtil.map(dto, Projeto.class);
 
