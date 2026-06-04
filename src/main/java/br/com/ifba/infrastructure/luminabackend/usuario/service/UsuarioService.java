@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class UsuarioService {
@@ -21,9 +23,9 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    // R - Lista todos os usuários cadastrados
-    public List<Usuario> listarTodos() {
-        return usuarioRepository.findAll();
+    // R - Lista todos os usuários cadastrados (Com Paginação)
+    public Page<Usuario> listarTodos(Pageable pageable) {
+        return usuarioRepository.findAll(pageable);
     }
 
     // R - Buscar usuário por ID (Dispara erro se não encontrar)

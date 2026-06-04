@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class CategoriaService {
@@ -20,9 +22,9 @@ public class CategoriaService {
         return categoriaRepository.save(categoria);
     }
 
-    // R - Lista todas as categorias existentes
-    public List<Categoria> listarTodas() {
-        return categoriaRepository.findAll();
+    // R - Retorna todas as categorias para listar no front (Com Paginação)
+    public Page<Categoria> listarTodas(Pageable pageable) {
+        return categoriaRepository.findAll(pageable);
     }
 
     // U - Atualiza o nome de uma categoria se ela existir no banco

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service // Avisa ao Spring que esta é uma classe de serviço de Projetos
 public class ProjetoService {
@@ -20,9 +22,9 @@ public class ProjetoService {
         return projetoRepository.save(projeto);
     }
 
-    // R - Retorna todos os projetos para listar no front
-    public List<Projeto> listarTodos() {
-        return projetoRepository.findAll();
+    // R - Retorna todos os projetos para listar no front (Com Paginação)
+    public Page<Projeto> listarTodos(Pageable pageable) {
+        return projetoRepository.findAll(pageable);
     }
 
     // R - Busca um único projeto pelo ID

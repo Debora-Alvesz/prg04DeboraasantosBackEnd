@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 
 import java.util.List;
 
@@ -38,16 +41,20 @@ public class CategoriaController {
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
-    // R - Listar todas as categorias (Converte a lista inteira para GetResponseDto)
+    // R - Listar todas as categorias (Com paginação)
     @GetMapping
-    public ResponseEntity<List<CategoriaGetResponseDto>> listarTodas() {
-        // 1. Busca a lista de entidades do Service
-        List<Categoria> categorias = categoriaService.listarTodas();
+    public ResponseEntity<Page<CategoriaGetResponseDto>> listarTodas(
+            @PageableDefault(page = 0, size = 10) Pageable pageable) {
 
-        // 2. Converte toda a lista de Categoria para uma lista de CategoriaGetResponseDto
-        List<CategoriaGetResponseDto> responseList = objectMapperUtil.mapAll(categorias, CategoriaGetResponseDto.class);
+        // 1. Busca a página de entidades do Service
+        Page<Categoria> categorias = categoriaService.listarTodas(pageable);
 
-        return ResponseEntity.ok(responseList);
+        // 2. Converte a página de Categoria para uma página de CategoriaGetResponseDto
+        Page<CategoriaGetResponseDto> responsePage = categorias.map(
+                categoriaEntity -> objectMapperUtil.map(categoriaEntity, CategoriaGetResponseDto.class)
+        );
+
+        return ResponseEntity.ok(responsePage);
     }
 
     // U - Editar uma categoria por ID (Recebe RequestDto e devolve GetResponseDto)

@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 
 @RestController
 @RequestMapping("/api/tarefas") // Define a rota padrão exigida no documento do projeto
@@ -38,16 +40,20 @@ public class TarefaController {
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
-    // R - Listar todas as tarefas cadastradas (Converte a lista de entidades para lista de GetResponseDto)
+    // R - Listar todas as tarefas cadastradas (Com paginação)
     @GetMapping
-    public ResponseEntity<List<TarefaGetResponseDto>> listarTodas() {
-        // 1. Busca a lista de entidades do Service
-        List<Tarefa> tarefas = tarefaService.listarTodas();
+    public ResponseEntity<Page<TarefaGetResponseDto>> listarTodas(
+            @PageableDefault(page = 0, size = 10) Pageable pageable) {
 
-        // 2. Converte toda a lista de Tarefa para uma lista de TarefaGetResponseDto
-        List<TarefaGetResponseDto> responseList = objectMapperUtil.mapAll(tarefas, TarefaGetResponseDto.class);
+        // 1. Busca a página de entidades do Service
+        Page<Tarefa> tarefas = tarefaService.listarTodas(pageable);
 
-        return ResponseEntity.ok(responseList);
+        // 2. Converte a página de Entidade (Tarefa) para DTO (TarefaGetResponseDto)
+        Page<TarefaGetResponseDto> responsePage = tarefas.map(
+                tarefa -> objectMapperUtil.map(tarefa, TarefaGetResponseDto.class)
+        );
+
+        return ResponseEntity.ok(responsePage);
     }
 
     // R - Buscar uma única tarefa por ID (Devolve GetResponseDto se encontrar)

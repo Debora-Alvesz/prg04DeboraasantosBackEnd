@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service // Avisa ao Spring que esta é uma classe de serviço (regras de negócio)
 public class TarefaService {
@@ -20,9 +22,9 @@ public class TarefaService {
         return tarefaRepository.save(tarefa);
     }
 
-    // Retorna todas as tarefas
-    public List<Tarefa> listarTodas() {
-        return tarefaRepository.findAll();
+    // Retorna todas as tarefas (Com Paginação)
+    public Page<Tarefa> listarTodas(Pageable pageable) {
+        return tarefaRepository.findAll(pageable);
     }
 
     // Busca uma tarefa por ID

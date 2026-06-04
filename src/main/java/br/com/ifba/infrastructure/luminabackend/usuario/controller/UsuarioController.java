@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 
 import java.util.List;
 
@@ -32,12 +35,20 @@ public class UsuarioController {
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
-    // R - Listar todos os usuários
+    // R - Listar todos os usuários (Paginado)
     @GetMapping
-    public ResponseEntity<List<UsuarioGetResponseDto>> listarTodos() {
-        List<Usuario> usuarios = usuarioService.listarTodos();
-        List<UsuarioGetResponseDto> responseList = objectMapperUtil.mapAll(usuarios, UsuarioGetResponseDto.class);
-        return ResponseEntity.ok(responseList);
+    public ResponseEntity<Page<UsuarioGetResponseDto>> listarTodos(
+            @PageableDefault(page = 0, size = 10, sort = "nome") Pageable pageable) {
+
+        // Busca os usuários no Service já paginados
+        Page<Usuario> usuarios = usuarioService.listarTodos(pageable);
+
+        // Converte a página de Usuario (Entidade) para UsuarioGetResponseDto (DTO)
+        Page<UsuarioGetResponseDto> responsePage = usuarios.map(
+                usuario -> objectMapperUtil.map(usuario, UsuarioGetResponseDto.class)
+        );
+
+        return ResponseEntity.ok(responsePage);
     }
 
     // R - Buscar usuário por ID (Mais simples: o service já joga erro se não achar)

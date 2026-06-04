@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import java.util.List;
 
 @RestController
@@ -38,16 +40,20 @@ public class ProjetoController {
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
-    // R - Listar todos os projetos (Converte a lista de entidades para lista de GetResponseDto)
+    // R - Listar todos os projetos (Com paginação)
     @GetMapping
-    public ResponseEntity<List<ProjetoGetResponseDto>> listarTodos() {
-        // 1. Busca a lista de entidades do Service
-        List<Projeto> projetos = projetoService.listarTodos();
+    public ResponseEntity<Page<ProjetoGetResponseDto>> listarTodos(
+            @PageableDefault(page = 0, size = 10) Pageable pageable) {
 
-        // 2. Converte toda a lista de Projeto para uma lista de ProjetoGetResponseDto
-        List<ProjetoGetResponseDto> responseList = objectMapperUtil.mapAll(projetos, ProjetoGetResponseDto.class);
+        // 1. Busca a página de entidades do Service
+        Page<Projeto> projetos = projetoService.listarTodos(pageable);
 
-        return ResponseEntity.ok(responseList);
+        // 2. Converte a página de Projeto para uma página de ProjetoGetResponseDto
+        Page<ProjetoGetResponseDto> responsePage = projetos.map(
+                projeto -> objectMapperUtil.map(projeto, ProjetoGetResponseDto.class)
+        );
+
+        return ResponseEntity.ok(responsePage);
     }
 
     // R - Buscar um projeto específico por ID (Devolve GetResponseDto se encontrar)
